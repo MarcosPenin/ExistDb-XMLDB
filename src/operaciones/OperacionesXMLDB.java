@@ -11,7 +11,7 @@ import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XPathQueryService;
 
-public class Operaciones {
+public class OperacionesXMLDB {
 	static Scanner sc = new Scanner(System.in);
 
 	public static void consultarEmp10(Collection col) throws XMLDBException {
@@ -121,15 +121,13 @@ public class Operaciones {
 		}
 	}
 
-	// UPDATE NO FUNCIONA
 	public static void updateStock(Collection col) {
 
 		XPathQueryService service;
 		try {
-			service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
-
-			String strAction = "for $produc in /PRODUCTOS let $stock_actual "
-					+ ":= $produc/stock_actual return update value $produc/stock_actual with data($stockactual)+10";
+            service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
+            String strAction = "for $stock in /productos/produc/stock_actual\n"
+                    + "return update value $stock with $stock+10";
 			ResourceSet result = service.query(strAction);
 
 		} catch (XMLDBException e) {
@@ -139,9 +137,6 @@ public class Operaciones {
 
 	}
 
-	// POR IMPLEMENTAR
-	public static void guardarFichero() {
-	}
 
 	public static void consultarPrecio50(Collection col) {
 
@@ -162,11 +157,115 @@ public class Operaciones {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	
-		
-		
+	}
+
+	public static void consultarDepartamentos(Collection col) {
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
+
+			String strAction = "for $dep in /departamentos/DEP_ROW[LOC='SEVILLA'] return $dep";
+
+			ResourceSet result = service.query(strAction);
+
+			ResourceIterator i = result.getIterator();
+			while (i.hasMoreResources()) {
+				Resource r = (Resource) i.nextResource();
+				System.out.println((String) r.getContent());
+			}
+		} catch (XMLDBException e) {
+
+			e.printStackTrace();
+		}
 
 	}
 
-}
+
+	
+
+	public static void insertarDepartamento(Collection col) {
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
+
+			String nuevodep = "<DEP_ROW><DEPT_NO>" + "DEP 10" + "</DEPT_NO>" + "<DNOMBRE>" + "Informatica"
+					+ "</DNOMBRE><LOC>" + "Vigo" + "</LOC>" + "</DEP_ROW>";
+
+			String strAction = "insert " + nuevodep + " into /departamentos";
+					
+			service.query(strAction);
+
+		} catch (XMLDBException e) {
+
+			e.printStackTrace();
+		}
+
+	}
+	
+	
+	  public static void borrarDepartamento(Collection col) {
+
+	        try {
+
+	            XPathQueryService service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
+
+	            String strAction = "update delete /departamentos/DEP_ROW[DEPT_NO=1]";
+
+	            ResourceSet result = service.query(strAction);
+
+	        } catch (XMLDBException E) {
+	            E.printStackTrace();
+	        }
+
+	    }
+
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	public static void guardarFichero() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+

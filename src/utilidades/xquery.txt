@@ -1,0 +1,98 @@
+1. Listar el título de todos los libros.
+	for $titulos in /bib/libro/titulo/string() 
+	return $titulos
+	
+	for $lib in /bib//titulo
+    return <LIBRO>{$lib/text()}</LIBRO>
+
+2. Listar año y título de todos los libros, ordenados por el año.
+	for $lib in /bib/libro
+	let $year := $lib/@año, $titulo := $lib/titulo order by  $lib/@año
+	return 
+	concat($year, ", ", $titulo)
+	
+	for $lib in /bib/libro
+       let $tit:= $lib/titulo/text(), $year :=$lib/data(@año)
+      order by $year
+      return <LIBRO>{$tit,', ',$year}</LIBRO>
+
+3. Listar los libros cuyo precio sea 65.95
+	for $libro in /bib/libro 
+	return
+	if ($libro/precio = "65.95") then
+		$libro
+		else()
+	--sólo aparecerá uno	
+		
+	for $lib in /bib/libro[precio=65.95]
+    return <LIBRO>{$lib/node()}</LIBRO>
+	
+	for $lib in /bib/libro[precio=65.95]
+	return $lib/titulo/data()
+
+4. Listar los libros publicados antes del año 2000
+	for $libro in /bib/libro 
+	return
+	if ($libro/@año < "2000") then
+		$libro
+		else()
+		
+	for $lib in /bib/libro[@año<2000]
+       return <LIBRO>{$lib/node()}</LIBRO>
+
+5. Listar año y título de los libros publicados por Addison-Wesley después del año 1992.
+	for $libro in /bib/libro 
+	let $year := $libro/@año, $titulo := $libro/titulo order by  $libro/@año
+	return
+	if($libro/editorial = "Addison-Wesley" and $year > 1992) then
+		concat($year, ", ", $titulo)
+		else()
+		
+	for $lib in /bib/libro[@año>1992 and editorial="Addison-Wesley"]
+       let $t := $lib/titulo, $year :=$lib/data(@año)
+       return <LIBRO>{$t,<YEAR>{$year}</YEAR>}</LIBRO>
+
+6. Listar año y título de los libros que tienen más de un autor.
+	for $libro in /bib/libro 
+	let $year := $libro/@año, $titulo := $libro/titulo order by  $libro/@año
+	return
+	if(count($libro/autor) > 1) then
+		concat($year, ", ", $titulo)
+		else()
+		
+	 for $lib in /bib/libro[count(autor)>1]
+       let $t := $lib/titulo, $year :=$lib/data(@año)
+       return <LIBRO>{$t,<YEAR>{$year}</YEAR>}</LIBRO>
+
+7. Listar año y título de los libros que tienen no tienen autor.
+	for $libro in /bib/libro 
+	let $year := $libro/@año, $titulo := $libro/titulo order by  $libro/@año
+	return
+	if(count($libro/autor) = 0) then
+		concat($year, ", ", $titulo)
+		else()
+
+	for $lib in /bib/libro[count(autor)<1]
+       let $t := $lib/titulo, $year :=$lib/data(@año)
+       return <LIBRO>{$t,<YEAR>{$year}</YEAR>}</LIBRO>
+
+8. Mostrar los apellidos de los autores que aparecen en el documento, sin repeticiones, ordenados alfabéticamente.
+	for $apellido in distinct-values(/bib//autor/apellido) order by $apellido
+	return
+	$apellido
+	
+	for $autores in distinct-values(/bib/libro/autor/apellido)
+       order by $autores
+       return <AUT_APELLIDO>{$autores}</AUT_APELLIDO>
+
+9. Por cada libro, listar agrupado en un elemento <result> su titulo y autores
+	for $libro in /bib/libro
+	let $titulo := $libro/titulo, $autor := $libro/autor
+	return <result>{$titulo}{$autor}</result>
+
+
+10. Por cada libro, obtener su título y el número de autores, agrupados en un elemento <libro>
+	for $libro in /bib/libro
+	let $titulo := $libro/titulo, $autor := $libro/autor
+	return
+	<libro>{concat($titulo,", ", count($autor))}</libro>

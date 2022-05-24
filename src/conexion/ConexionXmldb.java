@@ -82,4 +82,21 @@ public class ConexionXmldb {
 		}
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

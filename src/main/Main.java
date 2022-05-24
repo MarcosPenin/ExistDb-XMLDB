@@ -1,7 +1,12 @@
 package main;
 
+import javax.xml.xquery.XQConnection;
+import javax.xml.xquery.XQException;
+
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
+
+import vista.VerMenu;
 
 public class Main {
 
@@ -10,21 +15,17 @@ public class Main {
 		// EJERCICIOS XMLDB
 
 		Collection col = conexion.ConexionXmldb.conectar();
-		conexion.ConexionXmldb.verColeciones();
-		conexion.ConexionXmldb.verRecursos();
 
-		// operaciones.Operaciones.consultarEmp10(col);
-
-		// operaciones.Operaciones.crearColeccionSubirArchivo(col);
-		// operaciones.Operaciones.borrarColeccion(col);
-		// operaciones.Operaciones.borrarArchivo(col);
-
-		// operaciones.Operaciones.anadirDocumento(col);
-		// operaciones.Operaciones.borrarArchivoSiExiste(col);
-
-		// operaciones.Operaciones.updateStock(col);
-
-		operaciones.Operaciones.consultarPrecio50(col);
+		
+		 
+		 
+		//VerMenu.menuPrincipal(col);
+		//operaciones.OperacionesXMLDB.consultarPrecio50(col);
+		
+		col.close();
+		
+		
+		
 	}
 
 }
